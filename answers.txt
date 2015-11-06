@@ -1,0 +1,26 @@
+5.4
+
+a) The outer loop cannot be parallelized. This is because there is a loop 
+carried dependency wherein if we rely on the value of x[n+1] for calculating 
+x[n]. Therefore, if x[n] is to be calculated, we cannot do it without first 
+calculating the previous value in the loop, so this section cannot be parallelized.
+
+b) The inner loop can be parallelized. Our dependency for x[r] is x[r+1:n] which 
+we are guaranteed to have had completed. The only thing we must be careful of is
+that the reduction is done properly. The code for this is in hw2_row.cpp.
+
+c) This outer loop can also not be parallelized. We see the first step is a division
+by the coefficient of x[n]. However, this is not a valid operation if it occurs 
+before the row after it has not finished as we would need to divide the rest of the
+coefficients in the row by the same factor to get the correct result. Thus, this
+is a loop carried dependency and is not parallelizable. 
+
+d) This loop can be parallelized. We are modifying rows that have not been done yet
+using the coefficient matrix(static) and the value for x[n] which is calculated
+right before this loop starts. the code for this is hw2_column.cpp
+
+e) Code included. I did timing tests on the hw2_row.cpp. 
+
+f) I tested dynamic, guided, and static [1, 100, 1000] schedules. The
+timing data is included as timing.csv. My fastest results came from guided,
+static 10, and static 1000. Static 1 and Guided performed the worst in my tests.
